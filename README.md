@@ -168,11 +168,10 @@ scripts/            # Dev cert generation, smoke test
 
 ## Deployment
 
-### Docker (recommended)
+### Docker Compose (recommended)
 
 ```bash
-docker build -t elixir_tak .
-docker run -d --name elixir_tak -p 8080:8080 -p 8087:8087 -p 8089:8089 -p 8443:8443 elixir_tak
+docker compose up -d
 ```
 
 That's it. On first run the container will:
@@ -183,18 +182,18 @@ That's it. On first run the container will:
 
 Dashboard: **http://localhost:8080/dashboard**
 
-To persist data and certs across container restarts, mount volumes:
-
-```bash
-docker run -d --name elixir_tak \
-  -p 8080:8080 -p 8087:8087 -p 8089:8089 -p 8443:8443 \
-  -v $(pwd)/data:/app/data \
-  -v $(pwd)/certs:/app/certs \
-  elixir_tak
-```
-
-To use your own certificates, place them in the mounted `certs/` directory
+Data and certs are persisted in named Docker volumes (`tak_data`, `tak_certs`)
+automatically. To use your own certificates, copy them into the certs volume
 (`server.pem`, `server-key.pem`, `ca.pem`) before starting the container.
+
+Optional environment variables can be set in `docker-compose.yml`:
+
+```yaml
+environment:
+  - PHX_HOST=your.domain.com
+  - SECRET_KEY_BASE=your_secret    # auto-generated if not set
+  - TAK_CERT_PASSWORD=atakonline
+```
 
 ### Standalone release
 
