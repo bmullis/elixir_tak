@@ -1,0 +1,198 @@
+.page {
+  flex: 1;
+  overflow: auto;
+  padding: var(--space-6);
+  max-width: 720px;
+}
+
+.title {
+  font-family: var(--font-sans);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin-bottom: var(--space-6);
+  color: var(--color-text);
+}
+
+.section {
+  margin-bottom: var(--space-6);
+}
+
+.sectionTitle {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-dim);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+}
+
+.label {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.input {
+  width: 240px;
+}
+
+.hint {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+.readOnly {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+/* Generate cert form */
+.formRow {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+
+.cnInput {
+  width: 280px;
+}
+
+.error {
+  font-size: var(--text-xs);
+  color: var(--color-error);
+  margin-top: var(--space-2);
+}
+
+/* Success card after generating */
+.successCard {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+}
+
+.successTitle {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-success);
+  margin-bottom: var(--space-2);
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.detailLabel {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--color-text-dim);
+}
+
+.detailValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text);
+  word-break: break-all;
+}
+
+/* Cert table */
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-xs);
+}
+
+.table th {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--color-text-dim);
+  text-align: left;
+  padding: var(--space-2) var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: var(--space-2) var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  vertical-align: middle;
+}
+
+.cellMono {
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+.cellFingerprint {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cellActions {
+  display: flex;
+  gap: var(--space-1);
+  white-space: nowrap;
+}
+
+.rowRevoked {
+  opacity: 0.5;
+}
+
+/* Profile download form */
+.profileCell {
+  background: var(--color-surface-2);
+  padding: var(--space-3) !important;
+}
+
+.profileForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.profileLabel {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--color-text-dim);
+}
+
+.profileFields {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+
+.hostInput {
+  width: 180px;
+}
+
+.portInput {
+  width: 80px;
+}

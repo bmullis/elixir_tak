@@ -1,0 +1,23 @@
+// Source: deptofdefense/AndroidTacticalAssaultKit-CIV
+// commoncommo/core/impl/protobuf/detail.proto
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+
+package atakmap.commoncommo.protobuf.v1;
+
+import "contact.proto";
+import "group.proto";
+import "precisionlocation.proto";
+import "status.proto";
+import "takv.proto";
+import "track.proto";
+
+message Detail {
+    string xmlDetail = 1;
+    Contact contact = 2;
+    Group group = 3;
+    PrecisionLocation precisionLocation = 4;
+    Status status = 5;
+    Takv takv = 6;
+    Track track = 7;
+}

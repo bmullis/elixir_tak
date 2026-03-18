@@ -1,0 +1,29 @@
+# Build artifacts
+_build/
+deps/
+
+# Node
+assets/node_modules/
+
+# Data and certs (mounted as volumes)
+data/
+certs/
+
+# Git
+.git/
+.gitignore
+
+# Dev/docs
+.claude/
+*.md
+!README.md
+cover/
+doc/
+tmp/
+
+# IDE
+.vscode/
+.idea/
+
+# Test
+test/

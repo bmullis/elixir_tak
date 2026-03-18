@@ -1,0 +1,57 @@
+/* IconButton — square clickable icon */
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-dim);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+  user-select: none;
+}
+
+.iconButton:hover:not(:disabled) {
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+}
+
+.iconButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.iconButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.iconButton[data-active="true"] {
+  background: var(--color-surface-3);
+  color: var(--color-accent);
+}
+
+/* Sizes */
+.sm {
+  width: var(--size-control-sm);
+  height: var(--size-control-sm);
+  font-size: var(--text-sm);
+}
+
+.md {
+  width: var(--size-control-md);
+  height: var(--size-control-md);
+  font-size: var(--text-base);
+}
+
+.lg {
+  width: var(--size-control-lg);
+  height: var(--size-control-lg);
+  font-size: var(--text-lg);
+}

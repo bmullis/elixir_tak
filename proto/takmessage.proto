@@ -1,0 +1,14 @@
+// Source: deptofdefense/AndroidTacticalAssaultKit-CIV
+// commoncommo/core/impl/protobuf/takmessage.proto
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+
+import "cotevent.proto";
+import "takcontrol.proto";
+
+package atakmap.commoncommo.protobuf.v1;
+
+message TakMessage {
+    TakControl takControl = 1;
+    CotEvent cotEvent = 2;
+}

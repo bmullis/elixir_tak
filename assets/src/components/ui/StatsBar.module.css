@@ -1,0 +1,53 @@
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  padding: 0 var(--space-4);
+  height: var(--stats-bar-height);
+  background: var(--color-surface-1);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.label {
+  font-family: var(--font-sans);
+  color: var(--color-text-dim);
+}
+
+.value {
+  font-family: var(--font-mono);
+  color: var(--color-text);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.accent {
+  font-family: var(--font-mono);
+  color: var(--color-accent);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.federation {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.fedConnected {
+  color: var(--color-success);
+}
+
+.fedDisconnected {
+  color: var(--color-text-dim);
+}

@@ -1,0 +1,10 @@
+// Source: deptofdefense/AndroidTacticalAssaultKit-CIV
+// commoncommo/core/impl/protobuf/status.proto
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+
+package atakmap.commoncommo.protobuf.v1;
+
+message Status {
+    uint32 battery = 1;
+}

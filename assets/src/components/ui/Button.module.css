@@ -1,0 +1,102 @@
+/* Button — atomic clickable element */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    opacity var(--transition-fast);
+  user-select: none;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Sizes */
+.sm {
+  height: var(--size-control-sm);
+  padding: 0 var(--space-3);
+  font-size: var(--text-xs);
+}
+
+.md {
+  height: var(--size-control-md);
+  padding: 0 var(--space-4);
+  font-size: var(--text-sm);
+}
+
+.lg {
+  height: var(--size-control-lg);
+  padding: 0 var(--space-5);
+  font-size: var(--text-base);
+}
+
+/* Variants */
+.primary {
+  background: var(--color-accent);
+  color: #09090b;
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+}
+
+.secondary {
+  background: var(--color-surface-2);
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.secondary:hover:not(:disabled) {
+  color: var(--color-text);
+  border-color: var(--color-text-dim);
+}
+
+.ghost {
+  background: transparent;
+  color: var(--color-text-dim);
+}
+
+.ghost:hover:not(:disabled) {
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+}
+
+.danger {
+  background: var(--color-error);
+  color: #fff;
+}
+
+.danger:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+/* Mono variant for tactical labels */
+.mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+/* Full width */
+.fullWidth {
+  width: 100%;
+}

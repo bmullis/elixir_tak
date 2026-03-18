@@ -1,0 +1,122 @@
+/* Shared base for both toolbar states */
+.toolbar,
+.optionsPanel {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: var(--space-1);
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  height: 40px;
+  white-space: nowrap;
+}
+
+/* Drawing options panel overrides */
+.optionsPanel {
+  gap: 0;
+  padding: var(--space-1);
+}
+
+.separator {
+  width: 1px;
+  height: 20px;
+  background: var(--color-border);
+  margin: 0 var(--space-1);
+  flex-shrink: 0;
+}
+
+/* Logical groups within the options panel */
+.group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-2);
+}
+
+/* Hint sits between left and right groups, gets muted treatment */
+.hintGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-2);
+}
+
+.nameInput {
+  width: 120px;
+}
+
+.colorSwatch {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-surface-3);
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: border-color var(--transition-fast);
+}
+
+.colorSwatch:hover {
+  border-color: var(--color-text-dim);
+}
+
+.colorInput {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.hintText {
+  font-size: var(--text-xs);
+  color: var(--color-text-dim);
+  letter-spacing: 0.01em;
+}
+
+.vertexCount {
+  font-size: var(--text-xs);
+  color: var(--color-text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Callsign label in toolbar */
+.callsignLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  padding: 0 var(--space-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 120px;
+}
+
+/* X close button in drawing panel */
+.closeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-control-sm);
+  height: var(--size-control-sm);
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-dim);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.closeButton:hover {
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+}

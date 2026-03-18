@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-zinc-950">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="csrf-token" content={Plug.CSRFProtection.get_csrf_token()} />
+  <title>ElixirTAK</title>
+  <link href="https://cdn.jsdelivr.net/npm/cesium@1.121/Build/Cesium/Widgets/widgets.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/cesium@1.121/Build/Cesium/Cesium.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: {
+        tak: {
+          cyan: '#00BCD4',
+          yellow: '#FFEB3B',
+          magenta: '#E040FB',
+          red: '#F44336',
+          green: '#4CAF50',
+          blue: '#2196F3',
+          orange: '#FF9800',
+          white: '#ECEFF1',
+          maroon: '#8D1C1C',
+          purple: '#9C27B0',
+          'dark-green': '#2E7D32',
+          teal: '#009688',
+        }
+      }}}
+    }
+  </script>
+  <style>
+    #tak-map { min-height: 0; overflow: hidden; }
+    .cesium-viewer, .cesium-viewer-cesiumWidgetContainer, .cesium-widget, .cesium-widget canvas {
+      width: 100% !important; height: 100% !important;
+    }
+    .emergency-banner { /* static — no animation */ }
+  </style>
+</head>
+<body class="h-full text-zinc-100">
+  <%= @inner_content %>
+  <script src="/assets/js/phoenix.min.js"></script>
+</body>
+</html>

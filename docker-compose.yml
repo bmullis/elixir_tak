@@ -1,0 +1,21 @@
+services:
+  elixir_tak:
+    build: .
+    container_name: elixir_tak
+    ports:
+      - "8080:8080"   # HTTP dashboard + API
+      - "8087:8087"   # CoT TCP (plaintext)
+      - "8089:8089"   # CoT TLS (mutual TLS)
+      - "8443:8443"   # HTTPS dashboard + API
+    volumes:
+      - tak_data:/app/data
+      - tak_certs:/app/certs
+    environment:
+      - PHX_HOST=localhost
+      # - SECRET_KEY_BASE=       # auto-generated if not set
+      # - TAK_CERT_PASSWORD=atakonline
+    restart: unless-stopped
+
+volumes:
+  tak_data:
+  tak_certs:

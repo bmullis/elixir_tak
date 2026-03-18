@@ -1,0 +1,11 @@
+// Source: deptofdefense/AndroidTacticalAssaultKit-CIV
+// commoncommo/core/impl/protobuf/contact.proto
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+
+package atakmap.commoncommo.protobuf.v1;
+
+message Contact {
+    string endpoint = 1;
+    string callsign = 2;
+}

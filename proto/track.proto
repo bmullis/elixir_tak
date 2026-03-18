@@ -1,0 +1,11 @@
+// Source: deptofdefense/AndroidTacticalAssaultKit-CIV
+// commoncommo/core/impl/protobuf/track.proto
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+
+package atakmap.commoncommo.protobuf.v1;
+
+message Track {
+    double speed = 1;
+    double course = 2;
+}

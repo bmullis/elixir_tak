@@ -1,0 +1,24 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.viewer {
+  width: 100%;
+  height: 100%;
+}
+
+/* Hide Cesium default UI chrome */
+.viewer :global(.cesium-viewer-toolbar),
+.viewer :global(.cesium-viewer-animationContainer),
+.viewer :global(.cesium-viewer-timelineContainer),
+.viewer :global(.cesium-viewer-bottom) {
+  display: none !important;
+}
+
+/* Hide credit container */
+.viewer :global(.cesium-widget-credits) {
+  display: none !important;
+}

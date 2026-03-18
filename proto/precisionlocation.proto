@@ -1,0 +1,11 @@
+// Source: deptofdefense/AndroidTacticalAssaultKit-CIV
+// commoncommo/core/impl/protobuf/precisionlocation.proto
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+
+package atakmap.commoncommo.protobuf.v1;
+
+message PrecisionLocation {
+    string geopointsrc = 1;
+    string altsrc = 2;
+}
