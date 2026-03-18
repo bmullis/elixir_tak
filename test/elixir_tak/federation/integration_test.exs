@@ -13,8 +13,6 @@ defmodule ElixirTAK.Federation.IntegrationTest do
 
   @moduletag :federation
 
-  @timeout 10_000
-
   setup do
     # LocalCluster requires the current node to be distributed
     unless Node.alive?() do

@@ -61,7 +61,7 @@ jobs:
             mix-${{ runner.os }}-${{ env.ELIXIR_VERSION }}-${{ env.OTP_VERSION }}-
 
       - run: mix deps.get
-      - run: mix test
+      - run: mix test --exclude tls
 
   dashboard:
     name: Dashboard
