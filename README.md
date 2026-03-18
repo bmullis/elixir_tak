@@ -148,8 +148,6 @@ Key design decisions:
 - **No protoc dependency.** Protobuf support uses hand-written encoder/decoder
   modules, keeping the build simple.
 
-See [CLAUDE.md](CLAUDE.md) for a detailed module map and architecture reference.
-
 ## Project Structure
 
 ```
