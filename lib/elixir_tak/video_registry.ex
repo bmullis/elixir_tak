@@ -338,17 +338,21 @@ defmodule ElixirTAK.VideoRegistry do
 
     case protocol do
       "rtsp" ->
-        path = case URI.parse(url) do
-          %URI{path: p} when is_binary(p) and p != "" -> p
-          _ -> ""
-        end
+        path =
+          case URI.parse(url) do
+            %URI{path: p} when is_binary(p) and p != "" -> p
+            _ -> ""
+          end
+
         {"rtsp", host, path, port}
 
       "rtmp" ->
-        path = case URI.parse(url) do
-          %URI{path: p} when is_binary(p) and p != "" -> p
-          _ -> ""
-        end
+        path =
+          case URI.parse(url) do
+            %URI{path: p} when is_binary(p) and p != "" -> p
+            _ -> ""
+          end
+
         {"rtmp", host, path, port}
 
       _ ->

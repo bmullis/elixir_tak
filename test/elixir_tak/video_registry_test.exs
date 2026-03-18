@@ -161,7 +161,12 @@ defmodule ElixirTAK.VideoRegistryTest do
   describe "video cache integration" do
     test "register/1 populates VideoCache" do
       {:ok, uid} =
-        VideoRegistry.register(%{url: "rtsp://cam.local/live", alias: "Cam 1", lat: 33.0, lon: -112.0})
+        VideoRegistry.register(%{
+          url: "rtsp://cam.local/live",
+          alias: "Cam 1",
+          lat: 33.0,
+          lon: -112.0
+        })
 
       feeds = ElixirTAK.VideoCache.get_all()
       assert length(feeds) == 1

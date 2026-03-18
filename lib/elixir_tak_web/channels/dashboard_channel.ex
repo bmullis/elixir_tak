@@ -646,12 +646,16 @@ defmodule ElixirTAKWeb.DashboardChannel do
     # Close polygon by repeating first vertex
     closing_link =
       case {shape_type, vertices} do
-        {"circle", _} -> ""
+        {"circle", _} ->
+          ""
+
         {_, [first | _]} ->
           lat = first["lat"] || 0.0
           lon = first["lon"] || 0.0
           "<link point=\"#{lat},#{lon},0.0\" />"
-        _ -> ""
+
+        _ ->
+          ""
       end
 
     ellipse_attrs =

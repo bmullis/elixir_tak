@@ -25,7 +25,9 @@ config :elixir_tak, ElixirTAKWeb.Endpoint,
   check_origin: false,
   watchers: [
     pnpm: [
-      "vite", "build", "--watch",
+      "vite",
+      "build",
+      "--watch",
       cd: Path.expand("../assets", __DIR__)
     ]
   ]

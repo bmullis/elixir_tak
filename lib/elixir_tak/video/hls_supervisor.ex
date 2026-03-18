@@ -26,7 +26,9 @@ defmodule ElixirTAK.Video.HLSSupervisor do
     if ffmpeg_path() do
       Logger.info("HLS transcoding enabled (ffmpeg found)")
     else
-      Logger.info("HLS transcoding disabled (ffmpeg not found -- install ffmpeg for browser playback of RTSP/RTMP streams)")
+      Logger.info(
+        "HLS transcoding disabled (ffmpeg not found -- install ffmpeg for browser playback of RTSP/RTMP streams)"
+      )
     end
 
     DynamicSupervisor.init(strategy: :one_for_one)

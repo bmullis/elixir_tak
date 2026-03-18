@@ -8,8 +8,7 @@ if config_env() == :prod do
       You can generate one by calling: mix phx.gen.secret
       """
 
-  config :elixir_tak, ElixirTAKWeb.Endpoint,
-    secret_key_base: secret_key_base
+  config :elixir_tak, ElixirTAKWeb.Endpoint, secret_key_base: secret_key_base
 
   config :elixir_tak,
     tcp_port: String.to_integer(System.get_env("TAK_TCP_PORT") || "8087"),

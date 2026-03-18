@@ -9,7 +9,9 @@ defmodule ElixirTAK.Video.HLSWorkerTest do
     # Use a test-specific HLS directory
     original_config = Application.get_env(:elixir_tak, ElixirTAK.Video.HLS, [])
 
-    Application.put_env(:elixir_tak, ElixirTAK.Video.HLS,
+    Application.put_env(
+      :elixir_tak,
+      ElixirTAK.Video.HLS,
       Keyword.merge(original_config, hls_dir: @hls_dir, enabled: true)
     )
 
@@ -23,7 +25,9 @@ defmodule ElixirTAK.Video.HLSWorkerTest do
 
   describe "child_spec/1" do
     test "builds a valid child spec" do
-      spec = HLSWorker.child_spec(%{uid: "test-1", url: "rtsp://example.com/stream", protocol: "rtsp"})
+      spec =
+        HLSWorker.child_spec(%{uid: "test-1", url: "rtsp://example.com/stream", protocol: "rtsp"})
+
       assert spec.id == {HLSWorker, "test-1"}
       assert spec.restart == :transient
     end

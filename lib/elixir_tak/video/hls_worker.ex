@@ -98,9 +98,20 @@ defmodule ElixirTAK.Video.HLSWorker do
     Logger.warning("HLS worker #{state.uid}: FFmpeg exited with code #{code}")
 
     if state.restart_count < @max_restart_attempts do
-      Logger.info("HLS worker #{state.uid}: scheduling restart (attempt #{state.restart_count + 1}/#{@max_restart_attempts})")
+      Logger.info(
+        "HLS worker #{state.uid}: scheduling restart (attempt #{state.restart_count + 1}/#{@max_restart_attempts})"
+      )
+
       Process.send_after(self(), :restart_ffmpeg, @restart_backoff_ms)
-      {:noreply, %{state | port: nil, os_pid: nil, status: :restarting, restart_count: state.restart_count + 1}}
+
+      {:noreply,
+       %{
+         state
+         | port: nil,
+           os_pid: nil,
+           status: :restarting,
+           restart_count: state.restart_count + 1
+       }}
     else
       Logger.error("HLS worker #{state.uid}: max restart attempts reached, giving up")
       broadcast_status(state.uid, :error)
@@ -164,15 +175,24 @@ defmodule ElixirTAK.Video.HLSWorker do
 
     args = [
       "-y",
-      "-loglevel", "warning",
-      "-rtsp_transport", "tcp",
-      "-i", state.url,
-      "-c", "copy",
-      "-f", "hls",
-      "-hls_time", to_string(hls_time),
-      "-hls_list_size", to_string(hls_list_size),
-      "-hls_flags", "delete_segments+append_list",
-      "-hls_segment_filename", segment_pattern,
+      "-loglevel",
+      "warning",
+      "-rtsp_transport",
+      "tcp",
+      "-i",
+      state.url,
+      "-c",
+      "copy",
+      "-f",
+      "hls",
+      "-hls_time",
+      to_string(hls_time),
+      "-hls_list_size",
+      to_string(hls_list_size),
+      "-hls_flags",
+      "delete_segments+append_list",
+      "-hls_segment_filename",
+      segment_pattern,
       index_path
     ]
 

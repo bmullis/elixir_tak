@@ -123,7 +123,9 @@ defmodule ElixirTAKWeb.VideoControllerTest do
     setup do
       original_config = Application.get_env(:elixir_tak, ElixirTAK.Video.HLS, [])
 
-      Application.put_env(:elixir_tak, ElixirTAK.Video.HLS,
+      Application.put_env(
+        :elixir_tak,
+        ElixirTAK.Video.HLS,
         Keyword.merge(original_config, hls_dir: @hls_dir)
       )
 
@@ -172,7 +174,9 @@ defmodule ElixirTAKWeb.VideoControllerTest do
     setup do
       original_config = Application.get_env(:elixir_tak, ElixirTAK.Video.HLS, [])
 
-      Application.put_env(:elixir_tak, ElixirTAK.Video.HLS,
+      Application.put_env(
+        :elixir_tak,
+        ElixirTAK.Video.HLS,
         Keyword.merge(original_config, snapshot_dir: @snapshot_dir)
       )
 

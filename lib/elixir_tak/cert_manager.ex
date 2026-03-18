@@ -29,8 +29,10 @@ defmodule ElixirTAK.CertManager do
     p12_pass = Keyword.get(opts, :p12_pass, p12_password())
     out_dir = Keyword.get(opts, :out_dir, client_dir(cn))
 
-    with {:ok, ca_cert_der} <- read_file(Path.join(ca_dir, "ca.pem"), &CertHelpers.read_cert_der!/1),
-         {:ok, ca_key} <- read_file(Path.join(ca_dir, "ca-key.pem"), &CertHelpers.decode_pem_file!/1) do
+    with {:ok, ca_cert_der} <-
+           read_file(Path.join(ca_dir, "ca.pem"), &CertHelpers.read_cert_der!/1),
+         {:ok, ca_key} <-
+           read_file(Path.join(ca_dir, "ca-key.pem"), &CertHelpers.decode_pem_file!/1) do
       serial = CertHelpers.next_serial!(ca_dir)
       File.mkdir_p!(out_dir)
 
@@ -110,7 +112,15 @@ defmodule ElixirTAK.CertManager do
     if missing != [] do
       {:error, "Required files not found: #{Enum.join(missing, ", ")}"}
     else
-      build_profile_zip(cn, host, tls_port, ca_pem_path, client_cert_path, client_key_path, p12_pass)
+      build_profile_zip(
+        cn,
+        host,
+        tls_port,
+        ca_pem_path,
+        client_cert_path,
+        client_key_path,
+        p12_pass
+      )
     end
   end
 
@@ -171,14 +181,25 @@ defmodule ElixirTAK.CertManager do
 
   # -- Private ---------------------------------------------------------------
 
-  defp build_profile_zip(cn, host, tls_port, ca_pem_path, client_cert_path, client_key_path, p12_pass) do
+  defp build_profile_zip(
+         cn,
+         host,
+         tls_port,
+         ca_pem_path,
+         client_cert_path,
+         client_key_path,
+         p12_pass
+       ) do
     tmp_dir = Path.join(System.tmp_dir!(), "elixir_tak_profile_#{:rand.uniform(100_000)}")
     File.mkdir_p!(tmp_dir)
 
     try do
       truststore_path = Path.join(tmp_dir, "truststore-root.p12")
 
-      with :ok <- CertHelpers.create_truststore_pkcs12!(ca_pem_path, truststore_path, password: p12_pass) do
+      with :ok <-
+             CertHelpers.create_truststore_pkcs12!(ca_pem_path, truststore_path,
+               password: p12_pass
+             ) do
         client_p12_path = Path.join(tmp_dir, "#{cn}.p12")
 
         with :ok <-
