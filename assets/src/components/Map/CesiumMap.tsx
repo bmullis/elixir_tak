@@ -21,6 +21,11 @@ import {
 } from "./entitySync";
 import { applyLayerFilters } from "./layerFilters";
 import { handleDrawingClick, syncDrawingPreview } from "./drawingHandlers";
+import {
+  handleMeasurementClick,
+  syncActiveMeasurement,
+  syncCompletedMeasurements,
+} from "./measurementHandlers";
 import styles from "./CesiumMap.module.css";
 
 /** Create an imagery provider for the given basemap style */
@@ -136,6 +141,7 @@ export default function CesiumMap() {
     handler.setInputAction((click: { position: Cesium.Cartesian2 }) => {
       const store = useDashboardStore.getState();
       const drawing = store.drawing;
+      const measurement = store.measurement;
 
       // If drawing mode is active, handle drawing clicks
       if (drawing.mode) {
@@ -148,6 +154,20 @@ export default function CesiumMap() {
         const lon = Cesium.Math.toDegrees(carto.longitude);
 
         handleDrawingClick(store, drawing, lat, lon);
+        return;
+      }
+
+      // If measurement mode is active, handle measurement clicks
+      if (measurement.mode) {
+        const ray = viewer.camera.getPickRay(click.position);
+        if (!ray) return;
+        const cartesian = viewer.scene.globe.pick(ray, viewer.scene);
+        if (!cartesian) return;
+        const carto = Cesium.Cartographic.fromCartesian(cartesian);
+        const lat = Cesium.Math.toDegrees(carto.latitude);
+        const lon = Cesium.Math.toDegrees(carto.longitude);
+
+        handleMeasurementClick(store, measurement, lat, lon);
         return;
       }
 
@@ -168,19 +188,37 @@ export default function CesiumMap() {
       }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
-    // Mouse move handler for circle radius preview
+    // Mouse move handler for circle radius preview + measurement rubber-band
     handler.setInputAction((move: { endPosition: Cesium.Cartesian2 }) => {
-      const drawing = useDashboardStore.getState().drawing;
-      if (drawing.mode !== "circle" || !drawing.center) return;
+      const state = useDashboardStore.getState();
+      const drawing = state.drawing;
+      const measurement = state.measurement;
 
-      const ray = viewer.camera.getPickRay(move.endPosition);
-      if (!ray) return;
-      const cartesian = viewer.scene.globe.pick(ray, viewer.scene);
-      if (!cartesian) return;
+      // Circle drawing preview
+      if (drawing.mode === "circle" && drawing.center) {
+        const ray = viewer.camera.getPickRay(move.endPosition);
+        if (!ray) return;
+        const cartesian = viewer.scene.globe.pick(ray, viewer.scene);
+        if (!cartesian) return;
 
-      const centerCart = Cesium.Cartesian3.fromDegrees(drawing.center.lon, drawing.center.lat);
-      const radius = Cesium.Cartesian3.distance(centerCart, cartesian);
-      syncDrawingPreview(viewer, { ...drawing, radius });
+        const centerCart = Cesium.Cartesian3.fromDegrees(drawing.center.lon, drawing.center.lat);
+        const radius = Cesium.Cartesian3.distance(centerCart, cartesian);
+        syncDrawingPreview(viewer, { ...drawing, radius });
+        return;
+      }
+
+      // Measurement rubber-band preview
+      if (measurement.mode && measurement.vertices.length > 0) {
+        const ray = viewer.camera.getPickRay(move.endPosition);
+        if (!ray) return;
+        const cartesian = viewer.scene.globe.pick(ray, viewer.scene);
+        if (!cartesian) return;
+
+        const carto = Cesium.Cartographic.fromCartesian(cartesian);
+        const lat = Cesium.Math.toDegrees(carto.latitude);
+        const lon = Cesium.Math.toDegrees(carto.longitude);
+        state.setMeasureCursor({ lat, lon });
+      }
     }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 
     viewerRef.current = viewer;
@@ -242,6 +280,15 @@ export default function CesiumMap() {
       }
       if (state.drawing !== prevState.drawing) {
         syncDrawingPreview(viewer, state.drawing);
+      }
+      if (state.measurement !== prevState.measurement) {
+        syncActiveMeasurement(viewer, state.measurement);
+        if (
+          state.measurement.results !== prevState.measurement.results ||
+          state.measurement.unit !== prevState.measurement.unit
+        ) {
+          syncCompletedMeasurements(viewer, state.measurement.results, state.measurement.unit);
+        }
       }
 
       // Re-apply layer filters after any sync

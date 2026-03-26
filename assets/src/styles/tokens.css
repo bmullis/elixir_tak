@@ -45,8 +45,12 @@
   --color-cat-emergency: var(--color-error);
   --color-cat-other: #a1a1aa;
 
+  /* Tool colors */
+  --color-measure: #fbbf24;
+  --color-measure-subtle: rgba(251, 191, 36, 0.08);
+
   /* Typography */
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
   /* Font sizes */

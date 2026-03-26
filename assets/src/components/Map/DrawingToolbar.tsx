@@ -1,7 +1,7 @@
 import { useCallback, useRef } from "react";
 import { useDashboardStore, type DrawingMode } from "../../store";
 import { getChannel } from "../../hooks/useChannel";
-import { IconButton, Button, Input, Tooltip } from "../ui";
+import { IconButton, Button, Input } from "../ui";
 import { MapPin, Triangle, Square, Circle, Route, X, type LucideIcon } from "lucide-react";
 import styles from "./DrawingToolbar.module.css";
 
@@ -13,8 +13,6 @@ const TOOL_ICONS: Record<DrawingMode, { icon: LucideIcon; label: string }> = {
   circle: { icon: Circle, label: "Circle" },
   route: { icon: Route, label: "Route" },
 };
-
-const TOOLS: DrawingMode[] = ["marker", "polygon", "rectangle", "circle", "route"];
 
 /** Hint text shown for each active drawing mode */
 function getHint(mode: DrawingMode, vertexCount: number): string {
@@ -56,26 +54,18 @@ function canConfirm(mode: DrawingMode, drawing: { vertices: { lat: number; lon: 
   }
 }
 
+/**
+ * Drawing options panel - only renders when a drawing tool is active.
+ * The idle tool buttons live in MapToolbar.
+ */
 export default function DrawingToolbar() {
   const drawing = useDashboardStore((s) => s.drawing);
   const identity = useDashboardStore((s) => s.identity);
-  const setDrawingMode = useDashboardStore((s) => s.setDrawingMode);
   const setDrawingName = useDashboardStore((s) => s.setDrawingName);
   const setDrawingColor = useDashboardStore((s) => s.setDrawingColor);
   const undoDrawingVertex = useDashboardStore((s) => s.undoDrawingVertex);
   const clearDrawing = useDashboardStore((s) => s.clearDrawing);
   const colorInputRef = useRef<HTMLInputElement>(null);
-
-  const handleToolClick = useCallback(
-    (mode: DrawingMode) => {
-      if (drawing.mode === mode) {
-        clearDrawing();
-      } else {
-        setDrawingMode(mode);
-      }
-    },
-    [drawing.mode, clearDrawing, setDrawingMode]
-  );
 
   const handleConfirm = useCallback(() => {
     if (!drawing.mode) return;
@@ -104,7 +94,6 @@ export default function DrawingToolbar() {
         remarks: drawing.remarks || null,
       });
     } else if (mode === "rectangle") {
-      // Expand 2 opposite corners into 4
       const [a, b] = drawing.vertices;
       const rectVerts = [
         { lat: a.lat, lon: a.lon },
@@ -145,7 +134,6 @@ export default function DrawingToolbar() {
   const handleColorChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const hex = e.target.value;
-      // Convert hex to rgba
       const r = parseInt(hex.slice(1, 3), 16);
       const g = parseInt(hex.slice(3, 5), 16);
       const b = parseInt(hex.slice(5, 7), 16);
@@ -154,7 +142,6 @@ export default function DrawingToolbar() {
     [setDrawingColor]
   );
 
-  // Convert current rgba to hex for the color input
   const currentHex = (() => {
     const m = drawing.color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
     if (!m) return "#00bcd4";
@@ -165,109 +152,79 @@ export default function DrawingToolbar() {
   })();
 
   const activeMode = drawing.mode;
-  const ActiveIcon = activeMode ? TOOL_ICONS[activeMode].icon : null;
+  if (!activeMode) return null;
+
+  const ActiveIcon = TOOL_ICONS[activeMode].icon;
 
   return (
-    <>
-      {/* Main toolbar - hidden when actively drawing */}
-      {!activeMode && (
-        <div className={styles.toolbar}>
-          {/* Callsign */}
-          <span className={styles.callsignLabel} title="Dashboard callsign">
-            {identity.callsign}
-          </span>
-
-          <div className={styles.separator} />
-
-          {/* Tool buttons */}
-          {TOOLS.map((mode) => {
-            const Icon = TOOL_ICONS[mode].icon;
-            return (
-              <Tooltip key={mode} content={TOOL_ICONS[mode].label} side="bottom">
-                <IconButton
-                  size="md"
-                  label={TOOL_ICONS[mode].label}
-                  active={drawing.mode === mode}
-                  onClick={() => handleToolClick(mode)}
-                >
-                  <Icon size={18} />
-                </IconButton>
-              </Tooltip>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Drawing options panel - replaces toolbar when actively drawing */}
-      {activeMode && ActiveIcon && (
-        <div className={styles.optionsPanel}>
-          {/* Left group: tool identity + naming */}
-          <div className={styles.group}>
-            <IconButton size="sm" label={TOOL_ICONS[activeMode].label} active>
-              <ActiveIcon size={16} />
-            </IconButton>
-            <Input
-              inputSize="sm"
-              value={drawing.name}
-              onChange={(e) => setDrawingName(e.target.value)}
-              placeholder={`${TOOL_ICONS[activeMode].label} name`}
-              className={styles.nameInput}
-            />
-            {activeMode !== "marker" && (
-              <>
-                <button
-                  className={styles.colorSwatch}
-                  style={{ backgroundColor: currentHex }}
-                  onClick={() => colorInputRef.current?.click()}
-                  title="Stroke color"
-                />
-                <input
-                  ref={colorInputRef}
-                  type="color"
-                  className={styles.colorInput}
-                  value={currentHex}
-                  onChange={handleColorChange}
-                />
-              </>
-            )}
-          </div>
-
-          <div className={styles.separator} />
-
-          {/* Center: contextual hint */}
-          <div className={styles.hintGroup}>
-            <span className={styles.hintText}>
-              {getHint(activeMode, drawing.vertices.length)}
-            </span>
-          </div>
-
-          <div className={styles.separator} />
-
-          {/* Right group: actions */}
-          <div className={styles.group}>
-            {drawing.vertices.length > 0 && activeMode !== "marker" && (
-              <Button variant="ghost" size="sm" onClick={undoDrawingVertex}>
-                Undo
-              </Button>
-            )}
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={handleConfirm}
-              disabled={!canConfirm(activeMode, drawing)}
-            >
-              Confirm
-            </Button>
+    <div className={styles.optionsPanel}>
+      {/* Left group: tool identity + naming */}
+      <div className={styles.group}>
+        <IconButton size="sm" label={TOOL_ICONS[activeMode].label} active>
+          <ActiveIcon size={16} />
+        </IconButton>
+        <Input
+          inputSize="sm"
+          value={drawing.name}
+          onChange={(e) => setDrawingName(e.target.value)}
+          placeholder={`${TOOL_ICONS[activeMode].label} name`}
+          className={styles.nameInput}
+        />
+        {activeMode !== "marker" && (
+          <>
             <button
-              className={styles.closeButton}
-              onClick={clearDrawing}
-              title="Cancel drawing"
-            >
-              <X size={14} />
-            </button>
-          </div>
-        </div>
-      )}
-    </>
+              className={styles.colorSwatch}
+              style={{ backgroundColor: currentHex }}
+              onClick={() => colorInputRef.current?.click()}
+              title="Stroke color"
+            />
+            <input
+              ref={colorInputRef}
+              type="color"
+              className={styles.colorInput}
+              value={currentHex}
+              onChange={handleColorChange}
+            />
+          </>
+        )}
+      </div>
+
+      <div className={styles.separator} />
+
+      {/* Center: contextual hint */}
+      <div className={styles.hintGroup}>
+        <span className={styles.hintText}>
+          {getHint(activeMode, drawing.vertices.length)}
+        </span>
+      </div>
+
+      <div className={styles.separator} />
+
+      {/* Right group: actions */}
+      <div className={styles.group}>
+        {drawing.vertices.length > 0 && activeMode !== "marker" && (
+          <Button variant="ghost" size="sm" onClick={undoDrawingVertex}>
+            Undo
+          </Button>
+        )}
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={handleConfirm}
+          disabled={!canConfirm(activeMode, drawing)}
+        >
+          Confirm
+        </Button>
+        <button
+          className={styles.closeButton}
+          onClick={clearDrawing}
+          title="Cancel drawing"
+          aria-label="Cancel drawing"
+          type="button"
+        >
+          <X size={14} />
+        </button>
+      </div>
+    </div>
   );
 }

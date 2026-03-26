@@ -1,5 +1,4 @@
-/* Shared base for both toolbar states */
-.toolbar,
+/* Drawing options panel - shown when a drawing tool is active */
 .optionsPanel {
   position: absolute;
   bottom: 20px;
@@ -7,7 +6,7 @@
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 0;
   padding: var(--space-1);
   background: var(--color-surface-1);
   border: 1px solid var(--color-border);
@@ -16,12 +15,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   height: 40px;
   white-space: nowrap;
-}
-
-/* Drawing options panel overrides */
-.optionsPanel {
-  gap: 0;
-  padding: var(--space-1);
 }
 
 .separator {
@@ -78,24 +71,6 @@
   font-size: var(--text-xs);
   color: var(--color-text-dim);
   letter-spacing: 0.01em;
-}
-
-.vertexCount {
-  font-size: var(--text-xs);
-  color: var(--color-text-dim);
-  font-variant-numeric: tabular-nums;
-}
-
-/* Callsign label in toolbar */
-.callsignLabel {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  padding: 0 var(--space-2);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 120px;
 }
 
 /* X close button in drawing panel */

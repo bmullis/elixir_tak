@@ -6,3 +6,5 @@ declare module "*.module.css" {
 }
 
 declare module "*.css" {}
+
+declare module "@fontsource-variable/inter";

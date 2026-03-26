@@ -66,6 +66,39 @@ export interface LayerState {
   soloLayer: LayerKey | null;
 }
 
+// ── Measurement Mode Types ───────────────────────────────────────────────────
+
+/** Measurement tool modes */
+export type MeasureMode = "distance" | "path" | "area";
+
+/** Distance/area display units */
+export type MeasureUnit = "metric" | "imperial" | "nautical";
+
+/** A completed or in-progress measurement */
+export interface MeasurementState {
+  /** Which measurement tool is active (null = inactive) */
+  mode: MeasureMode | null;
+  /** Accumulated vertices for the current measurement */
+  vertices: Vertex[];
+  /** Current display unit system */
+  unit: MeasureUnit;
+  /** Completed measurements (persisted until cleared) */
+  results: MeasurementResult[];
+  /** Live cursor position for rubber-band preview (not stored as vertex) */
+  cursorPosition: Vertex | null;
+}
+
+/** A completed measurement result */
+export interface MeasurementResult {
+  id: string;
+  mode: MeasureMode;
+  vertices: Vertex[];
+  /** Total distance in meters (for distance/path) or area in sq meters (for area) */
+  value: number;
+  /** Per-segment distances in meters (for path mode) */
+  segments: number[];
+}
+
 // ── Drawing Mode Types ──────────────────────────────────────────────────────
 
 /** Drawing tool modes */
@@ -125,6 +158,30 @@ function saveIdentity(identity: DashboardIdentity) {
     // ignore
   }
 }
+
+const MEASURE_UNIT_KEY = "elixir_tak_measure_unit";
+
+const VALID_MEASURE_UNITS: MeasureUnit[] = ["metric", "imperial", "nautical"];
+
+function loadMeasureUnit(): MeasureUnit {
+  try {
+    const stored = localStorage.getItem(MEASURE_UNIT_KEY);
+    if (stored && VALID_MEASURE_UNITS.includes(stored as MeasureUnit)) {
+      return stored as MeasureUnit;
+    }
+  } catch {
+    // ignore
+  }
+  return "metric";
+}
+
+const DEFAULT_MEASUREMENT_STATE: MeasurementState = {
+  mode: null,
+  vertices: [],
+  unit: loadMeasureUnit(),
+  results: [],
+  cursorPosition: null,
+};
 
 const DEFAULT_DRAWING_STATE: DrawingState = {
   mode: null,
@@ -280,6 +337,9 @@ export interface DashboardState {
   /** Drawing mode state */
   drawing: DrawingState;
 
+  /** Measurement tool state */
+  measurement: MeasurementState;
+
   /** Dashboard operator identity */
   identity: DashboardIdentity;
 
@@ -339,6 +399,17 @@ export interface DashboardState {
   setDrawingColor: (color: string) => void;
   undoDrawingVertex: () => void;
   clearDrawing: () => void;
+
+  /* Measurement actions */
+  setMeasureMode: (mode: MeasureMode | null) => void;
+  addMeasureVertex: (vertex: Vertex) => void;
+  undoMeasureVertex: () => void;
+  setMeasureUnit: (unit: MeasureUnit) => void;
+  setMeasureCursor: (position: Vertex | null) => void;
+  completeMeasurement: (result: MeasurementResult) => void;
+  removeMeasurement: (id: string) => void;
+  clearMeasurements: () => void;
+  clearActiveMeasurement: () => void;
 
   /* Identity actions */
   setCallsign: (callsign: string) => void;
@@ -414,6 +485,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
   layerState: loadLayerState(),
   basemap: (localStorage.getItem(BASEMAP_STORAGE_KEY) as BasemapStyle) || "dark",
   drawing: { ...DEFAULT_DRAWING_STATE },
+  measurement: { ...DEFAULT_MEASUREMENT_STATE },
   identity: loadIdentity(),
   videoStreams: new Map(),
 
@@ -691,6 +763,10 @@ export const useDashboardStore = create<DashboardState>((set) => ({
       drawing: mode
         ? { ...DEFAULT_DRAWING_STATE, mode, color: state.drawing.color }
         : { ...DEFAULT_DRAWING_STATE },
+      // Clear measurement mode if drawing activates
+      measurement: mode
+        ? { ...state.measurement, mode: null, vertices: [], cursorPosition: null }
+        : state.measurement,
     })),
 
   addDrawingVertex: (vertex) =>
@@ -722,6 +798,68 @@ export const useDashboardStore = create<DashboardState>((set) => ({
     })),
 
   clearDrawing: () => set({ drawing: { ...DEFAULT_DRAWING_STATE } }),
+
+  // ── Measurement actions ─────────────────────────────────────────────
+
+  setMeasureMode: (mode) =>
+    set((state) => ({
+      measurement: mode
+        ? { ...state.measurement, mode, vertices: [], cursorPosition: null }
+        : { ...state.measurement, mode: null, vertices: [], cursorPosition: null },
+      // Clear drawing mode if measurement activates
+      drawing: mode ? { ...DEFAULT_DRAWING_STATE } : state.drawing,
+    })),
+
+  addMeasureVertex: (vertex) =>
+    set((state) => ({
+      measurement: { ...state.measurement, vertices: [...state.measurement.vertices, vertex] },
+    })),
+
+  undoMeasureVertex: () =>
+    set((state) => ({
+      measurement: {
+        ...state.measurement,
+        vertices: state.measurement.vertices.slice(0, -1),
+      },
+    })),
+
+  setMeasureUnit: (unit) => {
+    try { localStorage.setItem(MEASURE_UNIT_KEY, unit); } catch { /* ignore */ }
+    set((state) => ({ measurement: { ...state.measurement, unit } }));
+  },
+
+  setMeasureCursor: (position) =>
+    set((state) => ({
+      measurement: { ...state.measurement, cursorPosition: position },
+    })),
+
+  completeMeasurement: (result) =>
+    set((state) => ({
+      measurement: {
+        ...state.measurement,
+        results: [...state.measurement.results, result],
+        vertices: [],
+        cursorPosition: null,
+      },
+    })),
+
+  removeMeasurement: (id) =>
+    set((state) => ({
+      measurement: {
+        ...state.measurement,
+        results: state.measurement.results.filter((r) => r.id !== id),
+      },
+    })),
+
+  clearMeasurements: () =>
+    set((state) => ({
+      measurement: { ...DEFAULT_MEASUREMENT_STATE, unit: state.measurement.unit },
+    })),
+
+  clearActiveMeasurement: () =>
+    set((state) => ({
+      measurement: { ...state.measurement, vertices: [], cursorPosition: null },
+    })),
 
   // ── Identity actions ──────────────────────────────────────────────
 
