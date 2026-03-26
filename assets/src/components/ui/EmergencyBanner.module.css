@@ -94,7 +94,7 @@
 .coords {
   font-size: 0.625rem;
   color: rgba(254, 202, 202, 0.7);
-  font-family: monospace;
+  font-family: var(--font-mono);
   flex-shrink: 0;
 }
 
