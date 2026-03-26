@@ -8,6 +8,7 @@ import ClientsPage from "./components/Clients/ClientsPage";
 import EventsPage from "./components/Events/EventsPage";
 import VideoPage from "./components/Video/VideoPage";
 import SettingsPage from "./components/Settings/SettingsPage";
+import "@fontsource-variable/inter";
 import "./styles/global.css";
 
 createRoot(document.getElementById("root")!).render(

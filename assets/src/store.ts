@@ -161,10 +161,24 @@ function saveIdentity(identity: DashboardIdentity) {
 
 const MEASURE_UNIT_KEY = "elixir_tak_measure_unit";
 
+const VALID_MEASURE_UNITS: MeasureUnit[] = ["metric", "imperial", "nautical"];
+
+function loadMeasureUnit(): MeasureUnit {
+  try {
+    const stored = localStorage.getItem(MEASURE_UNIT_KEY);
+    if (stored && VALID_MEASURE_UNITS.includes(stored as MeasureUnit)) {
+      return stored as MeasureUnit;
+    }
+  } catch {
+    // ignore
+  }
+  return "metric";
+}
+
 const DEFAULT_MEASUREMENT_STATE: MeasurementState = {
   mode: null,
   vertices: [],
-  unit: (localStorage.getItem(MEASURE_UNIT_KEY) as MeasureUnit) || "metric",
+  unit: loadMeasureUnit(),
   results: [],
   cursorPosition: null,
 };

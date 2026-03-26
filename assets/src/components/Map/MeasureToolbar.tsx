@@ -171,6 +171,8 @@ export default function MeasureToolbar() {
               className={styles.closeButton}
               onClick={handleCancelActive}
               title="Cancel measurement"
+              aria-label="Cancel measurement"
+              type="button"
             >
               <X size={14} />
             </button>
@@ -187,6 +189,8 @@ export default function MeasureToolbar() {
               className={styles.clearAll}
               onClick={clearMeasurements}
               title="Clear all"
+              aria-label="Clear all measurements"
+              type="button"
             >
               <Trash2 size={12} />
             </button>
@@ -213,6 +217,8 @@ export default function MeasureToolbar() {
                     className={styles.copyButton}
                     onClick={() => handleCopy(r.id, text)}
                     title="Copy to clipboard"
+                    aria-label="Copy to clipboard"
+                    type="button"
                   >
                     {copiedId === r.id ? <Check size={12} /> : <Copy size={12} />}
                   </button>
@@ -220,6 +226,8 @@ export default function MeasureToolbar() {
                     className={styles.removeButton}
                     onClick={() => removeMeasurement(r.id)}
                     title="Remove"
+                    aria-label="Remove measurement"
+                    type="button"
                   >
                     <X size={12} />
                   </button>

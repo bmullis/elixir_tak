@@ -219,6 +219,8 @@ export default function DrawingToolbar() {
           className={styles.closeButton}
           onClick={clearDrawing}
           title="Cancel drawing"
+          aria-label="Cancel drawing"
+          type="button"
         >
           <X size={14} />
         </button>
